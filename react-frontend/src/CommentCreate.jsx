@@ -3,29 +3,31 @@ import "./css/comment.css";
 import axios from "axios";
 import { useState } from "react";
 
-const CommentCreate = () => {
-	const [title, setTitle] = useState("");
+const CommentCreate = ({ postId }) => {
+	const [content, setContent] = useState("");
 
 	const post = async (event) => {
 		event.preventDefault();
 
-		const data = await axios.post("http://localhost:3000/posts", {
-			title,
-		});
-		console.log(data);
+		const data = await axios.post(
+			`http://localhost:8000/posts/${postId}/comments`,
+			{
+				content,
+			}
+		);
 
-		setTitle("");
+		setContent("");
 	};
 	return (
 		<>
-			<div className="form-group">
+			<div className="form-groupC">
 				<form onSubmit={post}>
 					<div>
-						<label>Title</label>
+						<label>New Comment</label>
 						<input
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-							className="input"
+							value={content}
+							onChange={(e) => setContent(e.target.value)}
+							className="inputC"
 							type="text"
 						/>
 					</div>

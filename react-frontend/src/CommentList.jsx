@@ -2,33 +2,31 @@ import { useEffect, useState } from "react";
 import "./css/comment.css";
 import axios from "axios";
 
-const CommentList = () => {
-	const [posts, setPosts] = useState({}); // we are getting back an object from our api
-	const fetchPosts = async () => {
-		const res = await axios.get("http://localhost:3000/posts");
+const CommentList = ({ postId }) => {
+	const [comments, setComments] = useState([]); // we are getting an array of comments
+	const fetchComments = async () => {
+		const res = await axios.get(
+			`http://localhost:8000/posts/${postId}/comments`
+		);
 
-		setPosts(res.data);
+		setComments(res.data);
 	};
 
 	// useEffect is use to ru code at very specific point in time of a lifecyle of a component
-	// we only want to run fetchPost only when we've recieved a data back, not before
+	// we only want to run fetchPost only 1 time when we've recieved a data back
 	useEffect(() => {
-		fetchPosts();
+		fetchComments();
 	}, []);
 
-	const renderedPosts = Object.values(posts).map((post) => {
+	const renderedComments = comments.map((comment) => {
 		return (
-			<div
-				className="form-group"
-				style={{ width: "30%", marginBottom: "20px" }}
-				key={post.id}
-			>
-				<h3>{post.title}</h3>
-			</div>
+			<li key={comment.id}>
+				<p>{comment.content}</p>
+			</li>
 		);
 	});
 
-	return <>{renderedPosts}</>;
+	return <ul>{renderedComments}</ul>;
 };
 
 export default CommentList;

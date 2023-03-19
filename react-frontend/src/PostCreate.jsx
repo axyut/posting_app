@@ -21,7 +21,7 @@ const PostCreate = () => {
 			<div className="form-group">
 				<form onSubmit={post}>
 					<div>
-						<label>Title</label>
+						<label>Post Title: </label>
 						<input
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}

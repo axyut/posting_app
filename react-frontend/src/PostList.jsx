@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./css/post.css";
 import axios from "axios";
+import CommentCreate from "./CommentCreate";
+import CommentList from "./CommentList";
 
 const PostList = () => {
 	const [posts, setPosts] = useState({}); // we are getting back an object from our api
@@ -24,6 +26,8 @@ const PostList = () => {
 				key={post.id}
 			>
 				<h3>{post.title}</h3>
+				<CommentList postId={post.id} />
+				<CommentCreate postId={post.id} />
 			</div>
 		);
 	});
