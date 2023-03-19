@@ -1,0 +1,21 @@
+.form-group {
+	margin: auto;
+	padding-top: 30px;
+	width: 330px;
+}
+
+.input {
+	margin-bottom: 30px;
+	padding: 5px 15px;
+	width: 300px;
+}
+
+.btn {
+	padding: 8px 16px;
+	border-radius: 2px;
+	cursor: pointer;
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+	background-color: rgb(11, 105, 64);
+	color: black;
+}
