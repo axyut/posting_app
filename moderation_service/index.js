@@ -21,15 +21,19 @@ app.post("/events", async (req, res) => {
 		const status = data.content.includes("orange")
 			? "rejected"
 			: "approved";
-		await axios.post(eventServer, {
-			type: "CommentModerated",
-			data: {
-				id: data.id,
-				postId: data.postId,
-				status,
-				content: data.content,
-			},
-		});
+		await axios
+			.post(eventServer, {
+				type: "CommentModerated",
+				data: {
+					id: data.id,
+					postId: data.postId,
+					status,
+					content: data.content,
+				},
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
 	}
 
 	res.send({ message: "DONE" });
@@ -37,5 +41,5 @@ app.post("/events", async (req, res) => {
 
 const PORT = 3002;
 app.listen(PORT, () => {
-	console.log(`Moderation Service => Running at http://localhost:${PORT}`);
+	console.log(`Running at http://localhost:${PORT}`);
 });

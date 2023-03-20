@@ -10,8 +10,9 @@
 		"moderation": "cd ./moderation_service && npm start",
 		"query": "cd ./query_service && npm start",
 		"react": "cd ./react-frontend && npm start",
-		"start": "concurrently \"npm run comments\" \"npm run posts\" \"npm run event-bus\" \"npm run moderation\" \"npm run query\" \"npm run react\"",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "concurrently  -n \" Comment, Post , EVENT-BUS , Moderation , Query , React \" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgYellow.bold,bgBlack.bold,bgWhite.bold\" \"npm run comments\"   \"npm run posts\"  \"npm run event-bus\"  \"npm run moderation\" \"npm run query\" \"npm run react\"  ",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"install": "concurrently   \"cd ./comments_service && npm install\"  \"cd ./posts_service && npm install\"  \"cd ./event-bus && npm install\"  \"cd ./moderation_service && npm install\"  \"cd ./query_service && npm install\"  \"cd ./react-frontend && npm install\""
 	},
 	"repository": {
 		"type": "git",

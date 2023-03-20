@@ -25,13 +25,17 @@ app.post("/posts", async (req, res) => {
 		title,
 	};
 
-	await axios.post(`http://localhost:${eventServer}/events`, {
-		type: "PostCreated",
-		data: {
-			id,
-			title,
-		},
-	});
+	await axios
+		.post(`http://localhost:${eventServer}/events`, {
+			type: "PostCreated",
+			data: {
+				id,
+				title,
+			},
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
 
 	res.status(201).send(posts[id]);
 });
@@ -42,5 +46,5 @@ app.post("/events", (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-	console.log(`Post Service => Running at http://localhost:${PORT}`);
+	console.log(`Running at http://localhost:${PORT}`);
 });

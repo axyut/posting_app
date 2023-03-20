@@ -30,15 +30,19 @@ app.post("/posts/:id/comments", async (req, res) => {
 	commentsByPostId[postId] = comments;
 	console.log(commentsByPostId);
 
-	await axios.post(eventServer, {
-		type: "CommentCreated",
-		data: {
-			id: commentId,
-			content,
-			postId,
-			status: "pending",
-		},
-	});
+	await axios
+		.post(eventServer, {
+			type: "CommentCreated",
+			data: {
+				id: commentId,
+				content,
+				postId,
+				status: "pending",
+			},
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
 
 	res.status(201).send(comments);
 });
@@ -53,15 +57,19 @@ app.post("/events", async (req, res) => {
 		const comment = comments.find((comment) => comment.id === id);
 		comment.status = status;
 
-		await axios.post(eventServer, {
-			type: "CommentUpdated",
-			data: { postId, id, status, content },
-		});
+		await axios
+			.post(eventServer, {
+				type: "CommentUpdated",
+				data: { postId, id, status, content },
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
 	}
 	console.log("recieved", req.body.type);
 });
 
 const PORT = 8000;
 app.listen(PORT, () => {
-	console.log(`Comments Service ==> Running at http://localhost:${PORT}`);
+	console.log(`Running at http://localhost:${PORT}`);
 });
