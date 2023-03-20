@@ -1,0 +1,30 @@
+{
+	"name": "posting_app_microservice",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"comments": "cd ./comments_service && npm start",
+		"posts": "cd ./posts_service && npm start",
+		"event-bus": "cd ./event-bus && npm start",
+		"moderation": "cd ./moderation_service && npm start",
+		"query": "cd ./query_service && npm start",
+		"react": "cd ./react-frontend && npm start",
+		"start": "concurrently \"npm run comments\" \"npm run posts\" \"npm run event-bus\" \"npm run moderation\" \"npm run query\" \"npm run react\"",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/axyut/posting_app_microservice_nodejs.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/axyut/posting_app_microservice_nodejs/issues"
+	},
+	"homepage": "https://github.com/axyut/posting_app_microservice_nodejs#readme",
+	"devDependencies": {
+		"concurrently": "^7.6.0"
+	}
+}

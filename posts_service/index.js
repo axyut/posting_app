@@ -42,5 +42,5 @@ app.post("/events", (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-	console.log(`Running at http://localhost:${PORT}`);
+	console.log(`Post Service => Running at http://localhost:${PORT}`);
 });
