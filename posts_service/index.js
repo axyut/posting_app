@@ -13,38 +13,38 @@ const posts = {};
 const eventServer = 5000;
 
 app.get("/posts", (req, res) => {
-	res.send(posts);
+  res.send(posts);
 });
 
 app.post("/posts", async (req, res) => {
-	const id = randomBytes(4).toString("hex");
-	const { title } = req.body;
-	console.log(title);
-	posts[id] = {
-		id,
-		title,
-	};
+  const id = randomBytes(4).toString("hex");
+  const { title } = req.body;
+  console.log(title);
+  posts[id] = {
+    id,
+    title,
+  };
 
-	await axios
-		.post(`http://localhost:${eventServer}/events`, {
-			type: "PostCreated",
-			data: {
-				id,
-				title,
-			},
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
+  await axios
+    .post(`http://localhost:${eventServer}/events`, {
+      type: "PostCreated",
+      data: {
+        id,
+        title,
+      },
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 
-	res.status(201).send(posts[id]);
+  res.status(201).send(posts[id]);
 });
 
 app.post("/events", (req, res) => {
-	console.log("recieved", req.body.type);
+  console.log("recieved", req.body.type);
 });
 
 const PORT = 3000;
 app.listen(PORT, () => {
-	console.log(`Running at http://localhost:${PORT}`);
+  console.log(`Running at http://localhost:${PORT}`);
 });
