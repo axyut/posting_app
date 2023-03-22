@@ -8,13 +8,13 @@
 
 ## Table of Contents
 
--   [Table of Contents](#table-of-contents)
--   [About The Project](#about-the-project)
-    -   [Built With](#built-with)
--   [Getting Started](#getting-started)
-    -   [Prerequisites](#prerequisites)
-    -   [Installation](#installation)
--   [Working](#working)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
+  - [Built With](#built-with)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Working](#working)
 
 <!-- ABOUT THE PROJECT -->
 
@@ -26,13 +26,13 @@
 
 This project is build with following languages and framework
 
--   [React](https://html.com)
--   [Express](https://developer.mozilla.org/en-US/docs/Web/CSS)
--   [Node](https://www.javascript.com/)
--   [Axios](https://www.javascript.com/)
--   [Concurrently](https://www.javascript.com/)
--   [Vite](https://www.javascript.com/)
--   [Docker](https://www.javascript.com/)
+- [React](https://html.com)
+- [Express](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- [Node](https://www.javascript.com/)
+- [Axios](https://www.javascript.com/)
+- [Concurrently](https://www.javascript.com/)
+- [Vite](https://www.javascript.com/)
+- [Docker](https://www.javascript.com/)
 
 <!-- GETTING STARTED -->
 
@@ -43,13 +43,13 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
--   Text editor
+- Text editor
 
 ### Installation
 
 1. Fork the repo in your github account.
 
-2. Clone the repo
+2. Clone the noDokernoKubernetes branch repo
 
 3. Move toward the Root directory .
 

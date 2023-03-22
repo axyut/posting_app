@@ -10,66 +10,66 @@ app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 
 const commentsByPostId = {};
-const eventServer = "http://localhost:5000/events";
+const eventServer = "http://event-bus-srv:5000/events";
 
 app.get("/posts/:id/comments", (req, res) => {
-	res.send(commentsByPostId[req.params.id] || []);
+  res.send(commentsByPostId[req.params.id] || []);
 });
 
 app.post("/posts/:id/comments", async (req, res) => {
-	const commentId = randomBytes(5).toString("hex");
-	const {
-		body: { content },
-		params: { id: postId },
-	} = req;
+  const commentId = randomBytes(5).toString("hex");
+  const {
+    body: { content },
+    params: { id: postId },
+  } = req;
 
-	const comments = commentsByPostId[postId] || []; // if undefined gives empty array
-	//console.log(comments);
-	comments.push({ id: commentId, content, status: "pending" });
+  const comments = commentsByPostId[postId] || []; // if undefined gives empty array
+  //console.log(comments);
+  comments.push({ id: commentId, content, status: "pending" });
 
-	commentsByPostId[postId] = comments;
-	console.log(commentsByPostId);
+  commentsByPostId[postId] = comments;
+  console.log(commentsByPostId);
 
-	await axios
-		.post(eventServer, {
-			type: "CommentCreated",
-			data: {
-				id: commentId,
-				content,
-				postId,
-				status: "pending",
-			},
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
+  await axios
+    .post(eventServer, {
+      type: "CommentCreated",
+      data: {
+        id: commentId,
+        content,
+        postId,
+        status: "pending",
+      },
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 
-	res.status(201).send(comments);
+  res.status(201).send(comments);
 });
 
 app.post("/events", async (req, res) => {
-	const { type, data } = req.body;
+  const { type, data } = req.body;
 
-	if (type === "CommentModerated") {
-		const { postId, id, status, content } = data;
-		const comments = commentsByPostId[postId];
+  if (type === "CommentModerated") {
+    const { postId, id, status, content } = data;
+    const comments = commentsByPostId[postId];
 
-		const comment = comments.find((comment) => comment.id === id);
-		comment.status = status;
+    const comment = comments.find((comment) => comment.id === id);
+    comment.status = status;
 
-		await axios
-			.post(eventServer, {
-				type: "CommentUpdated",
-				data: { postId, id, status, content },
-			})
-			.catch((err) => {
-				console.log(err.message);
-			});
-	}
-	console.log("recieved", req.body.type);
+    await axios
+      .post(eventServer, {
+        type: "CommentUpdated",
+        data: { postId, id, status, content },
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  console.log("recieved", req.body.type);
 });
 
 const PORT = 8000;
 app.listen(PORT, () => {
-	console.log(`Running at http://localhost:${PORT}`);
+  console.log(`Running at http://localhost:${PORT}`);
 });

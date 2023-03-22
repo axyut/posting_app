@@ -10,13 +10,13 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(cors());
 
 const posts = {};
-const eventServer = 5000;
+const eventServer = "http://event-bus-srv:5000/events";
 
 app.get("/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("/posts", async (req, res) => {
+app.post("/posts/create", async (req, res) => {
   const id = randomBytes(4).toString("hex");
   const { title } = req.body;
   console.log(title);
@@ -26,7 +26,7 @@ app.post("/posts", async (req, res) => {
   };
 
   await axios
-    .post(`http://localhost:${eventServer}/events`, {
+    .post(eventServer, {
       type: "PostCreated",
       data: {
         id,
@@ -46,5 +46,6 @@ app.post("/events", (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Running at http://localhost:${PORT}`);
+  console.log(`Running at http://posts-clusterip-srv:${PORT}`);
+  console.log("Version 50");
 });

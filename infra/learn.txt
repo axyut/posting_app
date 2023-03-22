@@ -1,0 +1,185 @@
+building Dockerfile
+
+#specify base image
+FROM node:alpine    
+
+#set working directory to '/app' in the container
+WORKDIR /app       
+
+#copy over only package.json file
+COPY package.json ./   
+
+#install required dependencies
+RUN npm install        
+
+#copy over all of our source code
+COPY ./ ./             
+
+#set the command to run when container starts up
+CMD ["npm", "start"]   
+
+
+
+building docker container => docker build .
+running built container => docker run <containerID>
+
+building with tag =>  docker -t posts_service .
+running =>  docker run posts_service
+
+if -t posts:0.0.1   version not given docker will deafult give latest
+
+creating docker shell/cmd => docker run -it <containerID> sh
+        can be used to execute comands 
+
+docker ps => print out information
+docker run <containerID>
+
+
+
+
+Kubernetes   tab size should be exactly 2
+.yaml config file
+apiVersion: v1      => specifies set of objects we want k8s to look at
+kind: Pod           => the type of object we want to create (Pod, Job, Deployment, Service)
+metadata:           => options for object we want to create 
+  name: posts       => when pod is created, it is given this name
+spec:               => attributes for object we want to create 
+  containers:       => we can create multiple containers in a single pod
+    - name: posts   => dash(-) means one container in an array of many, containers name can also be same name as pod
+      image: axyut/posts:0.0.1  => version number because docker will default write latest
+
+
+commands
+
+kubectl get pods  =>print information about runnig pods
+kubectl exec -it [pod_name] [cmd]   => execute given command in running pod
+    kubectl exec -it posts logs
+kubectl logs [pod_name]
+kubectl delete pod [pod_name]  => delete given pod
+kubectl delete pods -all
+kubectl apply -f [config_file_name]    => to process the config file
+kubectl decribe pod [pod_name]    => prints information about running pod
+
+
+set alias kubectl to k for easier
+minikube delete --all --purge   => delete all minikube information from pc without uninstalling it
+minikube delete
+minikube image load <dockerImage>   => not good idea
+minikube create --driver docker    => first creating a cluster
+minikube status   => status of cluster
+
+ ###################################################
+eval $(minikube -p minikube docker-env)   it is in my .profile and .bashrc because to execute it everytime i open my terminal, hope: to build docker image and let it know to minikube docker register, kubectl can only make image on local that is known to registry
+otherwise kubectl starts to look for it in online, to deny it wirite in yaml config file of kubectl, imagePullPolicy: Never
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-world
+spec:
+  template:
+    metadata:
+      name: hello-world-pod
+    spec:
+      containers:
+      - name: hello-world
+        image: forketyfork/hello-world
+        imagePullPolicy: Never
+      restartPolicy: Never
+
+link= https://medium.com/swlh/how-to-run-locally-built-docker-images-in-kubernetes-b28fbc32cc1d
+ ########################################################
+
+config file for deployment that will automatically create no. of pods for us.
+$ kubectl get deployments  =>
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+posts-depl   1/1     1            1           46s
+$ kubectl get pods ==> should be 1 pod that is auto created by deployment on our configuration
+  (even if we delete now this pod, our deployment wil auto create new pod for us)
+$ kubectl decribe deployment posts-depl
+$ kubectl delete deployment posts-depl   ==> also deletes all pods in that deployment
+
+Updating Image to deployment
+1   telling kubernetes after making changes to app and building docker with new version 0.0.5
+    $ k apply -f posts-depl.yaml
+    output: deployment.apps/posts-depl configured   (it says configured rather than created becuase it is tracking our configuration and changing only what is required)
+
+2   telling to always use latest version of image (auto update itself and remake)
+    in depl.yaml  (not mentioning the version name OR using :latest) in both config and while building docker image
+    PUSH the image to dockerhub  => docker push axyut/posts  (ie name of image)
+    REstart ==> kubectl rollout restart deployment posts-depl  (notice not the file but the deployment name)
+    DONE
+
+
+Services (making req to hidden node server)
+#Cluster Ip => setup simple url to access pod (only exposes pods to other pods in cluster) not to outside
+#Node port   => make pod accessible from outside the cluster (only used for dev purposes)
+#Load Balancer   =>  right way to expose pod to outsid world
+#Exterenal name   => redirects an in-cluster request to CNAME url
+
+1. NodePort  (for development only)
+selector is used to expose pods
+$ k get services  or k describe service posts-srv
+  NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+  kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          5h2m
+  posts-srv    NodePort    10.102.238.55   <none>        3000:32570/TCP   8s
+32570 is what we use to access 
+get minikube ip => $ minikube ip  => 192.168.49.2
+to access in browser <minikube_ip>:NodePort/route  (192.168.49.2:32570/posts)
+
+2. ClusterIP
+    Pod                     Pod
+    posts                  Event-bus
+      |                       |
+      |                       |
+      ----ClusterIPService-----
+
+-- making clusterip service in deployment file
+-- changing localhost with clusterip service name in our app (index.js file)  example http://localhost:3000/events  to http://posts-clusterip-srv:3000/events  
+-- building docker image
+-- pushing to dockerhub
+-- resatrting deployment (kubectl rollout restart deployment posts-depl)
+
+
+3. Load Balancer
+####### REACT APP CONNECTION ###########
+-- creating load balancer service which will transfer request to appropraite pods
+ingress -- a pod with a set of routing rules to disrtibute traffic to other services
+---  ingress-nginx   vs kubernetes-ingress  (different products)
+install from -- https://kubernetes.github.io/ingress-nginx/deploy/#minikube
+
+
+
+
+
+
+
+
+
+
+$ k apply -f .   (dot for all)
+
+links i used for troubleshooting when first installing kubernetes an minikube
+# certificate issue   -> minikube delete --all --purge
+# port refused to connect issue   -> removing kubectl and local hosting kubernetes services(kind, kinikube) then reinstalling minikube first and then kubectl  (check for .kube for and config file inside)
+# no server address when kubectl version
+# errImagePull and errImagePullBackoff   (imagePullPolicy: Never and setting up command in bashrc)
+# docker driver error (when you are needed to sudo each time to build and run docker)
+        better to put you in a group docker giving it full priviledges ($ sudo usermod -aG docker $USER && newgrp docker) 
+# uninstalling kubectl (
+-- Installed kubectl binary via curl: sudo rm /usr/local/bin/kubectl
+-- Downloaded as part of the Google Cloud SDK: gcloud components remove kubectl
+-- Installed with snap on Ubuntu (just as Gparmar said): snap remove kubectl
+        In addition, you may need to remove the configuration files in ~/.kube
+)
+# issue minikube addons ingress
+-- minikube delete 
+-- minikube create --driver=docker
+-- minikube addons ingress
+-- go to k8s dir with configs the kubectl apply -f .
+# issue with ingress default config installation
+-- kubectl apply -f <doployment_file_location>
+solve by -- kubectl delete -f <doployment_file_location>
+          -- kubectl apply -f <doployment_file_location>
+
+# issue error: resource mapping not found || make sure CRDs are installed first
+https://stackoverflow.com/questions/72224230/error-resource-mapping-not-found-make-sure-crds-are-installed-first

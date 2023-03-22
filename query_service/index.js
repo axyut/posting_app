@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 
-const eventServer = "http://localhost:5000/events";
+const eventServer = "http://event-bus-srv:5000/events";
 const posts = {};
 // Example
 // posts = {
@@ -32,53 +32,53 @@ const posts = {};
 // };
 
 const handleEvent = (type, data) => {
-	if (type === "PostCreated") {
-		const { id, title } = data;
+  if (type === "PostCreated") {
+    const { id, title } = data;
 
-		posts[id] = { id, title, comments: [] };
-	}
-	if (type === "CommentCreated") {
-		const { id, content, postId, status } = data;
+    posts[id] = { id, title, comments: [] };
+  }
+  if (type === "CommentCreated") {
+    const { id, content, postId, status } = data;
 
-		const post = posts[postId];
-		post.comments.push({ id, content, status });
-	}
-	if (type === "CommentUpdated") {
-		const { id, content, postId, status } = data;
+    const post = posts[postId];
+    post.comments.push({ id, content, status });
+  }
+  if (type === "CommentUpdated") {
+    const { id, content, postId, status } = data;
 
-		const post = posts[postId];
-		const comment = post.comments.find((comment) => comment.id === id);
+    const post = posts[postId];
+    const comment = post.comments.find((comment) => comment.id === id);
 
-		comment.status = status;
-		comment.content = content;
-	}
+    comment.status = status;
+    comment.content = content;
+  }
 };
 
 app.get("/posts", (req, res) => {
-	res.send(posts);
+  res.send(posts);
 });
 
 app.post("/events", (req, res) => {
-	const { type, data } = req.body;
+  const { type, data } = req.body;
 
-	handleEvent(type, data);
-	console.log(posts);
-	res.send("Success!");
+  handleEvent(type, data);
+  console.log(posts);
+  res.send("Success!");
 });
 
 const PORT = 3001;
 app.listen(PORT, async () => {
-	console.log(`Running at http://localhost:${PORT}`);
-	// right after server is running we are gonna make request for missing events
-	try {
-		const res = await axios.get(eventServer);
+  console.log(`Running at http://localhost:${PORT}`);
+  // right after server is running we are gonna make request for missing events
+  try {
+    const res = await axios.get(eventServer);
 
-		for (let event of res.data) {
-			console.log("Processing event:", event.type);
+    for (let event of res.data) {
+      console.log("Processing event:", event.type);
 
-			handleEvent(event.type, event.data);
-		}
-	} catch (error) {
-		console.log(error.message);
-	}
+      handleEvent(event.type, event.data);
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
 });
