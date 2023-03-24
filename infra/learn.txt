@@ -147,8 +147,10 @@ ingress -- a pod with a set of routing rules to disrtibute traffic to other serv
 ---  ingress-nginx   vs kubernetes-ingress  (different products)
 install from -- https://kubernetes.github.io/ingress-nginx/deploy/#minikube
 
+-- k apply -f ingress-srv.yaml
+see k get ingress ingress-srv
 
-
+-- also setup posts.com to /etc/hosts     write <minikube_ip>  posts.com
 
 
 
@@ -157,6 +159,7 @@ install from -- https://kubernetes.github.io/ingress-nginx/deploy/#minikube
 
 
 $ k apply -f .   (dot for all)
+$ kubectl rollout restart deployment posts-depl
 
 links i used for troubleshooting when first installing kubernetes an minikube
 # certificate issue   -> minikube delete --all --purge
@@ -174,7 +177,7 @@ links i used for troubleshooting when first installing kubernetes an minikube
 # issue minikube addons ingress
 -- minikube delete 
 -- minikube create --driver=docker
--- minikube addons ingress
+-- minikube addons enable ingress
 -- go to k8s dir with configs the kubectl apply -f .
 # issue with ingress default config installation
 -- kubectl apply -f <doployment_file_location>
@@ -183,3 +186,4 @@ solve by -- kubectl delete -f <doployment_file_location>
 
 # issue error: resource mapping not found || make sure CRDs are installed first
 https://stackoverflow.com/questions/72224230/error-resource-mapping-not-found-make-sure-crds-are-installed-first
+

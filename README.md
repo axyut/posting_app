@@ -20,7 +20,7 @@
 
 ## About The Project
 
-    An Implementation of a Post creating app with comments as a microservice for each feature. Services communicate in Async Architecture. An Event Bus created from scratch with express.
+An Implementation of a Post creating app with comments as a microservice for each feature. Services communicate in Async Architecture. An Event Bus created from scratch with express.
 
 ### Built With
 
@@ -39,17 +39,20 @@ This project is build with following languages and framework
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get a local copy up and running follow these simple example steps. If this all is overwhelming you can try NOdockerNOkuber branch and follow the guidelines from that readme file.
 
 ### Prerequisites
 
 - Text editor
+- Docker
+- Kubernetes
+- minikube
 
 ### Installation
 
-1. Fork the repo in your github account.
+1. Clone the repo to your machine
 
-2. Clone the noDokernoKubernetes branch repo
+2. Make sure you're at master branch.
 
 3. Move toward the Root directory .
 
@@ -57,29 +60,37 @@ To get a local copy up and running follow these simple example steps.
    cd posting_app_microservice_nodejs
 ```
 
-4. Install required dependencies at root folder
+4. Dockerize each service
 
 ```sh
-   npm i
+   docker build . -t <username>/<servicename>
 ```
 
-5. Install required dependencies for all microservices from root folder
+5. start minikube
 
 ```sh
-   npm run install
+   minikube start --driver=docker
 ```
 
-6. Run from root folder
+6. Apply deployment configs
 
 ```sh
-   npm start
+   cd /infra/k8s
+   kubectl apply -y .
+```
+
+7. Visit http://<minikube_ip>:Nodeport/
+
+```sh
+   minikube ip  (shows minikube_ip)
+   kubectl get svc (shows Nodeport of posts-srv)
 ```
 
 <!--Working-->
 
 ## Working
 
-1.  [Go to Website](http://localhost:3003)
+1.  [Go to Website]()
 
         This is how it look like after moving on the page.
 
