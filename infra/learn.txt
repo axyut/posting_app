@@ -153,7 +153,13 @@ see k get ingress ingress-srv
 -- also setup posts.com to /etc/hosts     write <minikube_ip>  posts.com
 
 
+Skaffold (skaffold.dev) => a tool that runs outside of kubernetes cluster
+-- a cmd tool that can automate tasks in kubernetes dev env
+-- easy to update code in running pod
+-- easy to create/delete all object tied to a pod or project at once
 
+-- create skaffold.yaml config in root 
+-- to run dev server: skaffold dev
 
 
 

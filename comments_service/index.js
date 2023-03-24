@@ -12,10 +12,6 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 const commentsByPostId = {};
 const eventServer = "http://event-bus-srv:5000/events";
 
-app.get("/posts/:id/comments", (req, res) => {
-  res.send(commentsByPostId[req.params.id] || []);
-});
-
 app.post("/posts/:id/comments", async (req, res) => {
   const commentId = randomBytes(5).toString("hex");
   const {
@@ -29,9 +25,8 @@ app.post("/posts/:id/comments", async (req, res) => {
 
   commentsByPostId[postId] = comments;
   console.log(commentsByPostId);
-
-  await axios
-    .post(eventServer, {
+  try {
+    await axios.post(eventServer, {
       type: "CommentCreated",
       data: {
         id: commentId,
@@ -39,13 +34,12 @@ app.post("/posts/:id/comments", async (req, res) => {
         postId,
         status: "pending",
       },
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.send(err);
     });
-
-  res.status(201).send(comments);
+    res.status(201).send(comments);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Cannot post to event", error });
+  }
 });
 
 app.post("/events", async (req, res) => {

@@ -5,11 +5,26 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/use-regex: "true"
+    ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: posts.com
       http:
         paths:
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3003
+          - path: /posts/?(.*)/comments
+            pathType: Prefix
+            backend:
+              service:
+                name: comments-srv
+                port:
+                  number: 8000
           - path: /posts/create
             pathType: Prefix
             backend:
@@ -24,18 +39,4 @@ spec:
                 name: query-srv
                 port:
                   number: 3001
-          - path: /posts/?(.*)/comments
-            pathType: Prefix
-            backend:
-              service:
-                name: comments-srv
-                port:
-                  number: 8000
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: client-srv
-                port:
-                  number: 3003
 # path for other react app with Routing services path: /?(.*)   put it at end

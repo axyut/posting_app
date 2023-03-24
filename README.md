@@ -47,6 +47,7 @@ To get a local copy up and running follow these simple example steps. If this al
 - Docker
 - Kubernetes
 - minikube
+- skaffold
 
 ### Installation
 
@@ -72,6 +73,8 @@ To get a local copy up and running follow these simple example steps. If this al
    minikube start --driver=docker
 ```
 
+## without Skaffold
+
 6. Apply deployment configs
 
 ```sh
@@ -79,7 +82,17 @@ To get a local copy up and running follow these simple example steps. If this al
    kubectl apply -y .
 ```
 
-7. Visit http://<minikube_ip>:Nodeport/
+## with Skaffold
+
+Start skaffold developemnt environment and track file changes automatically.
+
+```sh
+   skaffold dev
+```
+
+## Local Server
+
+Visit http://<minikube_ip>:Nodeport/
 
 ```sh
    minikube ip  (shows minikube_ip)
