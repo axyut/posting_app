@@ -193,3 +193,6 @@ solve by -- kubectl delete -f <doployment_file_location>
 # issue error: resource mapping not found || make sure CRDs are installed first
 https://stackoverflow.com/questions/72224230/error-resource-mapping-not-found-make-sure-crds-are-installed-first
 
+# issue routes not working / and /posts/:id/comments
+-- ingress class fixed according to new update
+-- vite configured
