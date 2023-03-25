@@ -195,4 +195,5 @@ https://stackoverflow.com/questions/72224230/error-resource-mapping-not-found-ma
 
 # issue routes not working / and /posts/:id/comments
 -- ingress class fixed according to new update
+-- NodePort removed
 -- vite configured

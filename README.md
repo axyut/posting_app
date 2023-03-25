@@ -92,11 +92,13 @@ Start skaffold developemnt environment and track file changes automatically.
 
 ## Local Server
 
-Visit http://<minikube_ip>:Nodeport/
+Visit http://<minikube_ip>/
+Or
+Setup posts.com host for minikube_ip at /etc/hosts the
+Visit http://posts.com/
 
 ```sh
    minikube ip  (shows minikube_ip)
-   kubectl get svc (shows Nodeport of posts-srv)
 ```
 
 <!--Working-->
@@ -109,6 +111,7 @@ Visit http://<minikube_ip>:Nodeport/
 
     <p >
       <img src="overview.jpg" width="400" title="WEB Page">
+      <img src="working.png" width="400" title="WEB Page">
     </p>
 
 2.  Post any post
