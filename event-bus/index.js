@@ -19,20 +19,20 @@ const moderationServer = "http://moderation-srv:3002/events";
 const commentServer = "http://comments-srv:8000/events";
 
 app.post("/events", (req, res) => {
-  const event = req.body;
-  events.push(event);
+    const event = req.body;
+    events.push(event);
 
-  try {
-    axios.post(postsServer, event);
-    axios.post(commentServer, event);
-    axios.post(queryServer, event);
-    axios.post(moderationServer, event);
+    try {
+        axios.post(postsServer, event);
+        axios.post(commentServer, event);
+        axios.post(queryServer, event);
+        axios.post(moderationServer, event);
 
-    res.status(200).json({ message: "OK" });
-  } catch (error) {
-    console.log(error);
-    res.send(error);
-  }
+        res.status(200).json({ message: "OK" });
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
 });
 
 // retirieve all events ever occored
@@ -43,5 +43,5 @@ app.post("/events", (req, res) => {
 
 const PORT = 5000;
 app.listen(PORT, () => {
-  console.log(`Running at http://event-bus-srv:${PORT}`);
+    console.log(`Running at http://event-bus-srv:${PORT}`);
 });
